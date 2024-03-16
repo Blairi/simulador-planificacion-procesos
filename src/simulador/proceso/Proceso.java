@@ -1,4 +1,4 @@
-package proceso;
+package simulador.proceso;
 
 public class Proceso {
     

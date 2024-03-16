@@ -1,4 +1,4 @@
-package simulador.planificacion.procesos;
+package simulador;
 
 public class SimuladorPlanificacionProcesos {
 

@@ -27,7 +27,7 @@ public class RoundRobin {
             
             // Agregar los procesos llegados al tiempo actual a la cola
             for ( Proceso proceso : this.procesos ) {
-                if ( proceso.getTiempoLlegada() <= this.tiempoActual && proceso.getTiempoEjecucion() > 0 ) {
+                if ( proceso.getTiempoLlegada() <= this.tiempoActual && proceso.getTiempoServicio() > 0 ) {
                     this.cola.encolar( proceso );
                 }
             }
@@ -38,17 +38,17 @@ public class RoundRobin {
 
                 // Verificar si el proceso actual no es null
                 if ( procesoActual != null ) {
-                    int tiempoEjecucion = Math.min(quantum, procesoActual.getTiempoEjecucion()); // Tiempo de ejecución actual
+                    int tiempoEjecucion = Math.min(quantum, procesoActual.getTiempoServicio()); // Tiempo de ejecución actual
                     this.tiempoActual += tiempoEjecucion;// Actualizar el tiempo actual
                     
-                    int tiempoRestanteProceso = procesoActual.getTiempoEjecucion() - tiempoEjecucion;
-                    procesoActual.setTiempoEjecucion( tiempoRestanteProceso ); // Actualizar el tiempo restante del proceso
+                    int tiempoRestanteProceso = procesoActual.getTiempoServicio() - tiempoEjecucion;
+                    procesoActual.setTiempoServicio( tiempoRestanteProceso ); // Actualizar el tiempo restante del proceso
 
                     // Imprimir información sobre la ejecución del proceso
                     System.out.println("Ejecutando " + procesoActual.getNombre() + " por " + tiempoEjecucion + " unidades de tiempo.");
 
                     // Verificar si el proceso se ha completado
-                    if ( procesoActual.getTiempoEjecucion() == 0 ) {
+                    if ( procesoActual.getTiempoServicio() == 0 ) {
                         this.numProcesosCompletados ++; // Incrementar el contador de procesos completados
                         System.out.println(procesoActual.getNombre() + " completado en el tiempo " + this.tiempoActual);
                     } else {

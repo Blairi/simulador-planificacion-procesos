@@ -55,6 +55,7 @@ public class RoundRobinSimulacion {
 
     public static void ejecutarRoundRobin(Cola cola, int quantum) {
         Map<Integer, Integer> tiempoLlegada = new HashMap<>();
+        int i = 1;
         int tiempoActual = 0;
         //Se tiene que definir dinamicamente
         int totalProcesos = 6;
@@ -64,6 +65,7 @@ public class RoundRobinSimulacion {
         int tiempoEsperaMaximo = 0; // Variable para mantener el tiempo de espera máximo en la simulación
 
         while (!cola.estaVacia()) {
+            System.out.println("Ronda: "+  i);
             Nodo procesoActual = cola.desencolar();
             if (!tiempoLlegada.containsKey(procesoActual.id)) {
                 tiempoLlegada.put(procesoActual.id, tiempoActual);
@@ -97,6 +99,8 @@ public class RoundRobinSimulacion {
                 System.out.println("Proceso " + procesoActual.id + " completado en el tiempo " + tiempoActual);
                 totalProcesos++;
             }
+            
+            i++;
         }
 
         mostrarPromedios(totalProcesos, sumaTiempoEspera, sumaTiempoRespuesta, sumaTiempoEjecucion);

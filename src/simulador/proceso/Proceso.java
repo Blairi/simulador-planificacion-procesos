@@ -83,7 +83,8 @@ public class Proceso {
     }
     @Override
     public String toString() {
-        return "Proceso{" + "id=" + id + ", nombre=" + nombre + ", tamanio=" + tamanio + ", tiempoServicio=" + tiempoServicio + ", tiempoLlegada=" + tiempoLlegada + "prioridad=" + prioridad + "tiempoSubidaCPU="+tiempoSubidaCPU+ '}';
+        // Para imprimir el proceso solo necesitamos conocer el nombre del proceso
+        return nombre;
     }
    
 }

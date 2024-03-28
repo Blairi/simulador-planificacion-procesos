@@ -13,18 +13,23 @@ public class ColaProcesos {
         this.memoriaActual = 0;
     }
     
-    public void encolar(Proceso proceso) {
+    public void encolarPLE(Proceso proceso) {
         
         if ( this.memoriaActual + proceso.getTamanio() <= 1024 ) {
             this.cola.encolar(proceso);
             this.memoriaActual += proceso.getTamanio();
             System.out.println("Subio el proceso " + proceso.getNombre() + 
-                    " y restan " + (1024 - this.memoriaActual) + " unidades de memoria");
+                    " a la cola de procesos listos y restan " + (1024 - this.memoriaActual) + " unidades de memoria");
         }
         else{
-            System.out.println("No hay suficiente memoria disponible "
-                    + "para subir el proceso " + proceso.getNombre());
+            System.out.println("No hay suficiente memoria disponible " + "para subir el proceso " + proceso.getNombre()+ " a la cola de procesos listos");
         }
+    }
+    public void encolar(Proceso proceso) {
+        
+        
+            this.cola.encolar(proceso);
+            this.memoriaActual += proceso.getTamanio();   
     }
     
     public Proceso desencolar() {

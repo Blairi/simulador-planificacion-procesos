@@ -13,6 +13,10 @@ public class Cola<T> {
         this.longitud = 0;
     }
     
+    public T getFrente() {
+        return this.frente.getValor();
+    }
+    
     public Boolean estaVacia(){
         // Si el frente y detras son nulos, la cola esta vacia
         return (null == frente && null == detras);

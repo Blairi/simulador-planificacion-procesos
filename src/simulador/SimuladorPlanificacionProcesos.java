@@ -1,9 +1,13 @@
-package simulador;
+package simuladorpp;
 
 import java.util.Scanner;
 import jtexttable.TextTable;
 import simulador.colaprocesos.ColaProcesos;
 import simulador.proceso.Proceso;
+import simulador.cola.Nodo;
+
+
+//import simulador.roundrobin.RoundRobin;
 
 public class SimuladorPlanificacionProcesos {
 
@@ -21,11 +25,14 @@ public class SimuladorPlanificacionProcesos {
         System.out.println("================== SIMULADOR PLANIFICADOR DE PROCESOS ==================");
         System.out.println("Instrucciones");
         System.out.println("\tCada proceso que usted ingrese debe contar con valores para el tamaño, tiempo de servicio y tiempo de llegada");
-        System.out.println("\tConsidere que el tamaño de memoria disponible es de 1024, por lo que ningun proceso puede ser mayor a esa cantidad\n");
+        System.out.println("\tConsidere que el tamanio de memoria disponible es de 1024, por lo que ningun proceso puede ser mayor a esa cantidad\n");
         
         // Solicitar el número de procesos
         int numProcesos;
-        ColaProcesos procesosListos = new ColaProcesos();
+        int quantum;
+        //Creamos la cola de procesos listos (aquellos que estan en espera de subir a la CPU
+        ColaProcesos colaPL = new ColaProcesos();
+        ColaProcesos colaPLE = new ColaProcesos();
         do {
             
             System.out.print("Ingrese el numero de procesos: ");
@@ -48,12 +55,14 @@ public class SimuladorPlanificacionProcesos {
         // Solicitar los datos para cada proceso
         
         // Arreglo temporal, solo para imprimir la entrada
-        String[][] procesosUsuario= new String[numProcesos][5];
+        String[][] procesosUsuario= new String[numProcesos][6];
         for ( int i = 1; i <= numProcesos; i++ ) {
             System.out.println("------------------------------------------");
             System.out.println("\nProceso " + i + ":");
-            int tamanio, tiempoServicio, tiempoLlegada, id;
+            int tamanio, tiempoServicio, tiempoLlegada, id, prioridad;
             String nombre;
+            //Inicializamos el tiempo en el que subio por primera vez a la CPU en 0
+            int tiempoSubidaCPU = 0;
 
             // Solicitar el tamanio del proceso
             do {
@@ -106,37 +115,136 @@ public class SimuladorPlanificacionProcesos {
             System.out.print("Ingrese el nombre del proceso: ");
             nombre = scanner.next();
             
+            do {
+            
+            System.out.print("Ingrese la prioridad del proceso: ");
+            
+            // Si el usuario ingresa un numero que no es entero
+            while ( !scanner.hasNextInt() ) {
+                System.out.println("Error: Ingrese un numero entero.");
+                scanner.next();
+            }
+            
+            // Leemos el numero de procesos
+            prioridad = scanner.nextInt();
+            
+            // Si el usuario pone 0 como numero de procesos, repetimos el ciclo
+            if ( prioridad <= 0 ) {
+                System.out.println("Error: La prioridad debe ser mayor que 0.");
+            }
+            } while (prioridad <= 0);
+            
             // Llenamos la matriz para imprimirla al final
             procesosUsuario[i-1][0] = String.valueOf( i );
             procesosUsuario[i-1][1] = nombre;
             procesosUsuario[i-1][2] = String.valueOf( tamanio );
             procesosUsuario[i-1][3] = String.valueOf( tiempoServicio );
             procesosUsuario[i-1][4] = String.valueOf( tiempoLlegada );
+            procesosUsuario[i-1][5] = String.valueOf( prioridad );
             
             // Insertamos el proceso a la cola
-            procesosListos.encolar( new Proceso(i, nombre, tamanio, tiempoServicio, tiempoLlegada) );
+            colaPL.encolarPLE( new Proceso(i, nombre, tamanio, tiempoServicio, tiempoLlegada,prioridad,tiempoSubidaCPU) );
+            
         }       
-        scanner.close();
+        
         
         // Mostrar procesos al usuario
         System.out.println("\nProcesos a simular: ");
-        String []encabezados = {"id", "Proceso", "Tamanio", "Tservicio", "Tllegada"};
+        String []encabezados = {"id", "Proceso", "Tamanio", "Tservicio", "Tllegada", "Prioridad"};
         System.out.println( new TextTable(encabezados, procesosUsuario) );
         
-        /*
-            Simular memoria 
-        */
-        
-        /*
-            Simular RR
-        */
-        
         // Pedir quantum
+        do {
+            
+            System.out.print("Ingrese el quantum con el que desea trabajar: ");
+            
+            // Si el usuario ingresa un numero que no es entero
+            while ( !scanner.hasNextInt() ) {
+                System.out.println("Error: Ingrese un numero entero.");
+                scanner.next();
+            }
+            
+            // Leemos el numero de procesos
+            quantum = scanner.nextInt();
+            
+            // Si el usuario pone 0 como numero de procesos, repetimos el ciclo
+            if ( quantum<= 0 ) {
+                System.out.println("Error: El quantum debe ser mayor que 0.");
+            }
+            } while (quantum <= 0);
+        scanner.close();
+      
+        //Algoritmo Round Robin
         
-        // Crear una instancia de RR y pasarle la cola de procesos listos 
-        // TODO: modificar la clase RR, en vez de un arrreglo, que sea una colaProcesosListos
+        int tiempoActual = 0;
+        //Refiere a procesos completados
+        int totalProcesos = 0;
+        int sumaTiempoEspera = 0;
+        int sumaTiempoRespuesta = 0;
+        int sumaTiempoEjecucion = 0;
 
+        // Mientras haya procesos en la cola de procesos
+        while (!colaPL.estaVacia()) {
+            // Obtener el proceso de la cola de procesos
+            Proceso procesoActual = colaPL.desencolar();
+            //La pasamos a la cola de procesos listos para ejecucion
+            //colaPL.encolar(procesoActual);
+            
+            // Si el proceso no ha sido ejecutado previamente
+            if (procesoActual.gettiempoSubidaCPU() == 0) {
+                procesoActual.tiempoSubidaCPU = tiempoActual;
+            }
+
+            // Calcular el tiempo de ejecución según el quantum y el tiempo restante del proceso
+            int tiempoEjecucion = Math.min(procesoActual.getTiempoServicio(), quantum);
+            
+            // Avanzar el tiempo actual
+            tiempoActual += tiempoEjecucion;
+            
+           
+            // Restar el tiempo de ejecución del proceso
+            procesoActual.setTiempoServicio(procesoActual.getTiempoServicio() - tiempoEjecucion);
+            System.out.println("Proceso " + procesoActual.id + " ejecutado durante " + tiempoEjecucion + " unidades. Tiempo restante: " + procesoActual.tiempoServicio);
+            // Si el proceso aún tiene tiempo restante
+            if (procesoActual.getTiempoServicio() > 0) {
+                // Volver a encolar el proceso en la cola de procesos
+                colaPL.encolar(procesoActual);
+            } else {
+                // El proceso ha terminado
+                System.out.println("Proceso " + procesoActual.id + " completado y no volverá a la cola. Tiempo sobrante " + Math.abs(procesoActual.tiempoServicio) + "\n");
+                totalProcesos++;
+                int tiempoFinalizacion = tiempoActual;
+                int tiempoRespuesta = procesoActual.tiempoSubidaCPU - tiempoEjecucion;
+                int tiempoEspera = (tiempoActual - procesoActual.tiempoServicio) -  procesoActual.tiempoLlegada - tiempoFinalizacion;
+                int tiempoEje = tiempoFinalizacion - procesoActual.tiempoLlegada;
+                
+                // Sumar los tiempos para calcular el promedio
+                sumaTiempoEjecucion += tiempoEje; // Tiempo de ejecución es igual al tiempo de respuesta en Round Robin
+                sumaTiempoRespuesta += tiempoRespuesta;
+                sumaTiempoEspera += tiempoEspera;
+            }
+            
+             /* Mostrar los resultados de la simulación
+            if (totalProcesos > 0) {
+                System.out.println("\n--- Resultados de la simulación ---");
+                System.out.println("Total de procesos completados: " + totalProcesos);
+                System.out.println("Tiempo promedio de espera: " + ((double) sumaTiempoEspera / totalProcesos));
+                System.out.println("Tiempo promedio de respuesta: " + ((double) sumaTiempoRespuesta / totalProcesos));
+                System.out.println("Tiempo promedio de ejecución: " + ((double) sumaTiempoEjecucion / totalProcesos));
+            }*/
+        }
+        //Crear un TextTable para mostrar los resultados de la simulación en forma de tabla
         
+        String[] encabezados2 = {"Total de procesos", "Tiempo promedio de espera", "Tiempo promedio de respuesta", "Tiempo promedio de ejecución"};
+        String[][] datos = {{String.valueOf(totalProcesos), String.format("%.2f", ((double) sumaTiempoEspera / totalProcesos)),
+                String.format("%.2f", ((double) sumaTiempoRespuesta / totalProcesos)), String.format("%.2f", ((double) sumaTiempoEjecucion / totalProcesos))}};
+        TextTable tablaResultados = new TextTable(encabezados2, datos);
+
+        // Mostrar la tabla de resultados
+        System.out.println("\nTabla de resultados:");
+        System.out.println(tablaResultados);
     }
-    
 }
+
+    
+

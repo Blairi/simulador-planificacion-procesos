@@ -3,21 +3,29 @@ package simulador.proceso;
 // Clase para representar un proceso
 public class Proceso {
     
-    private int id; // Identificador del proceso
-    private String nombre; // Nombre del proceso
-    private int tamanio; // Tamanio del proceso
-    private int tiempoServicio; // Tiempo de ejecucion del proceso
-    private int tiempoLlegada; // Tiempo de llegada
+    public int id; // Identificador del proceso
+    public String nombre; // Nombre del proceso
+    public int tamanio; // Tamanio del proceso
+    public int tiempoServicio; // Tiempo de ejecucion del proceso
+    public int tiempoLlegada; // Tiempo de llegada
+    public int prioridad;
+    public int tiempoSubidaCPU;
+    
 
     public Proceso() {
     }
 
-    public Proceso(int id, String nombre, int tamanio, int tiempoServicio, int tiempoLlegada) {
+    public Proceso(int id, String nombre, int tamanio, int tiempoServicio, int tiempoLlegada,int prioridad, int tiempoSubidaCPU) {
         this.id = id;
         this.nombre = nombre;
         this.tamanio = tamanio;
+        //Tiempo de servicio constantemente se tiene que actualizar
+        //tiempoServicio = tiempoServicio - Tprev ejecutado
         this.tiempoServicio = tiempoServicio;
         this.tiempoLlegada = tiempoLlegada;
+        this.prioridad = prioridad;
+        //Tiempo que subio a la CPU por primera vez
+        this.tiempoSubidaCPU = tiempoSubidaCPU;
     }
 
     public int getId() {
@@ -59,10 +67,23 @@ public class Proceso {
     public void setTiempoLlegada(int tiempoLlegada) {
         this.tiempoLlegada = tiempoLlegada;
     }
+      public int getPrioridad() {
+        return prioridad;
+    }
 
+    public void setPrioridad(int prioridad) {
+        this.prioridad = prioridad;
+    }
+    public int gettiempoSubidaCPU() {
+        return tiempoSubidaCPU;
+    }
+
+    public void settiempoSubidaCPU(int tiempoSubidaCPU) {
+        this.tiempoSubidaCPU = tiempoSubidaCPU;
+    }
     @Override
     public String toString() {
-        return "Proceso{" + "id=" + id + ", nombre=" + nombre + ", tamanio=" + tamanio + ", tiempoServicio=" + tiempoServicio + ", tiempoLlegada=" + tiempoLlegada + '}';
+        return "Proceso{" + "id=" + id + ", nombre=" + nombre + ", tamanio=" + tamanio + ", tiempoServicio=" + tiempoServicio + ", tiempoLlegada=" + tiempoLlegada + "prioridad=" + prioridad + "tiempoSubidaCPU="+tiempoSubidaCPU+ '}';
     }
    
 }

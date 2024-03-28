@@ -17,18 +17,18 @@ public class SimuladorPlanificacionProcesos {
             Para esta parte del codigo leemos la entradas del usuario,
             con algunas validaciones para que el programa funcione bien
         */
-//        ColaProcesos colaPL = leerProcesos();
-//        int quantum = leerQuantum();
+        ColaProcesos colaPL = leerProcesos();
+        int quantum = leerQuantum();
 
         //FORMATO TEMPORAL PARA ENCOLAR
-        ColaProcesos colaPL = new ColaProcesos();
-        colaPL.encolarPLE(new Proceso(1, "P1", 100, 6, 1, 1, 0,0));
-        colaPL.encolarPLE(new Proceso(2, "P2", 100, 18, 4, 1, 0,0));
-        colaPL.encolarPLE(new Proceso(3, "P3", 100, 12, 6, 1, 0,0));
-        colaPL.encolarPLE(new Proceso(4, "P4", 100, 17, 7, 1, 0,0));
-        //colaPL.encolarPLE(new Proceso(5, "P5", 100, 2, 0, 1, 0,0));
-        //colaPL.encolarPLE(new Proceso(6, "P6", 100, 12, 0, 1, 0,0));  
-        int quantum = 4;
+//        ColaProcesos colaPL = new ColaProcesos();
+//        colaPL.encolarPLE(new Proceso(1, "P1", 100, 20, 0, 1, 0,0));
+//        colaPL.encolarPLE(new Proceso(2, "P2", 100, 8, 0, 1, 0,0));
+//        colaPL.encolarPLE(new Proceso(3, "P3", 100, 10, 0, 1, 0,0));
+//        colaPL.encolarPLE(new Proceso(4, "P4", 100, 13, 0, 1, 0,0));
+//        colaPL.encolarPLE(new Proceso(5, "P5", 100, 2, 0, 1, 0,0));
+//        colaPL.encolarPLE(new Proceso(6, "P6", 100, 9, 0, 1, 0,0));  
+//        int quantum = 4;
         
         //Algoritmo Round Robin
         int tiempoActual = 0;

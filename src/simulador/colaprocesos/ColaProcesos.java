@@ -30,23 +30,33 @@ public class ColaProcesos {
             // Si no hay suficiente memoria, mostramos un mensaje de error
             System.out.println("No hay suficiente memoria disponible " + "para subir el proceso " + proceso.getNombre()+ " a la cola de procesos listos");
         }
+        
+        this.cola.imprimirCola();
     }
      // Método para encolar un proceso en la cola
     public void encolar(Proceso proceso) {
             // Simplemente encolamos el proceso sin verificar la memoria
             this.cola.encolar(proceso);
             this.memoriaActual += proceso.getTamanio();   
+            this.imprimirEstado();
     }
     // Método para desencolar un proceso de la cola
     public Proceso desencolar() {
         // Desencolamos un proceso y actualizamos la memoria actual
         Proceso procesoDesencolado =  this.cola.desencolar();
         this.memoriaActual -= procesoDesencolado.getTamanio();
+        
+        this.imprimirEstado();
         return procesoDesencolado;
     }
      // Método para verificar si la cola está vacía
     public Boolean estaVacia() {
         return this.cola.estaVacia();
+    }
+    
+    public void imprimirEstado() {
+        System.out.println("\nCola actual ultimo->primero");
+        this.cola.imprimirCola();
     }
     
 }

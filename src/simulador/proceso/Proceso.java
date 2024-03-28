@@ -102,7 +102,7 @@ public class Proceso {
     //Representamos el proceso como una cadena
     @Override
     public String toString() {
-        return "Proceso{" + "id=" + id + ", nombre=" + nombre + ", tamanio=" + tamanio + ", tiempoServicio=" + tiempoServicio + ", tiempoLlegada=" + tiempoLlegada + "prioridad=" + prioridad + "tiempoSubidaCPU="+tiempoSubidaCPU+ '}';
+        return nombre;
     }
    
 }

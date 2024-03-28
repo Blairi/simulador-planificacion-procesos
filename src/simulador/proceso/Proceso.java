@@ -10,12 +10,15 @@ public class Proceso {
     public int tiempoLlegada; // Tiempo de llegada
     public int prioridad;
     public int tiempoSubidaCPU;
+    //Para el calculo de los tiempos de espera
+    //Es un acumulador de cuanto tiempo ha sido procesado
+    public int tiempoProcesado;
     
 
     public Proceso() {
     }
 
-    public Proceso(int id, String nombre, int tamanio, int tiempoServicio, int tiempoLlegada,int prioridad, int tiempoSubidaCPU) {
+    public Proceso(int id, String nombre, int tamanio, int tiempoServicio, int tiempoLlegada,int prioridad, int tiempoSubidaCPU, int tiempoProcesado) {
         this.id = id;
         this.nombre = nombre;
         this.tamanio = tamanio;
@@ -26,6 +29,7 @@ public class Proceso {
         this.prioridad = prioridad;
         //Tiempo que subio a la CPU por primera vez
         this.tiempoSubidaCPU = tiempoSubidaCPU;
+        this.tiempoProcesado = tiempoProcesado;
     }
 
     public int getId() {
@@ -80,6 +84,13 @@ public class Proceso {
 
     public void settiempoSubidaCPU(int tiempoSubidaCPU) {
         this.tiempoSubidaCPU = tiempoSubidaCPU;
+    }
+    public int getTiempoProcesado() {
+        return tiempoProcesado;
+    }
+
+    public void setTiempoProcesado(int tiempoProcesado) {
+        this.tiempoProcesado = tiempoProcesado;
     }
     @Override
     public String toString() {

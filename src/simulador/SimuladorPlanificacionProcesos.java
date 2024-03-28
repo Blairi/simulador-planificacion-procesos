@@ -1,8 +1,12 @@
 package simulador;
 
+//Sirve para pedir datos por teclado
 import java.util.Scanner;
+//Sirve para dar formato a las tablas
 import jtexttable.TextTable;
+//Sirve para crear las colas
 import simulador.colaprocesos.ColaProcesos;
+//Sirve para ir almacenando los procesos
 import simulador.proceso.Proceso;
 
 public class SimuladorPlanificacionProcesos {
@@ -16,6 +20,7 @@ public class SimuladorPlanificacionProcesos {
 //        ColaProcesos colaPL = leerProcesos();
 //        int quantum = leerQuantum();
 
+        //FORMATO TEMPORAL PARA ENCOLAR
         ColaProcesos colaPL = new ColaProcesos();
         colaPL.encolarPLE(new Proceso(1, "P1", 100, 6, 1, 1, 0,0));
         colaPL.encolarPLE(new Proceso(2, "P2", 100, 18, 4, 1, 0,0));
@@ -29,8 +34,9 @@ public class SimuladorPlanificacionProcesos {
         int tiempoActual = 0;
         //En caso de que el tiempo de llegada del primer proceso sea distinto de 0, arreglamos los resultados con esta variable
         int tiempoAuxiliar = 0;
-        //Refiere a procesos completados
+        //Refiere a procesos completados, conforme vayan acabando los procesos incrementa en 1
         int totalProcesos = 0;
+        //Variables usadas para almacenar la suma de los tiempos de espera,respuesta,ejecucion
         int sumaTiempoEspera = 0;
         int sumaTiempoRespuesta = 0;
         int sumaTiempoEjecucion = 0;
@@ -40,15 +46,23 @@ public class SimuladorPlanificacionProcesos {
         while (!colaPL.estaVacia()) {
             // Obtener el proceso de la cola de procesos
             Proceso procesoActual = colaPL.desencolar();
-            //La pasamos a la cola de procesos listos para ejecucion
-            //colaPL.encolar(procesoActual);
+            
+            //Este condicinal se ocupa cuando el primer proceso en llegar tiene un tiempo de llegada disntinto a 0
+            //Ya que los calculos se realizan considerando un tiempo inicial de 0
+            
             if(procesoActual.id == 1 && procesoActual.tiempoLlegada != 0){
+                //El tiempoAuxiliar es igual al tiempo de llegada del primer proceso
+                //Usado para el calculo de tiempos
                 tiempoAuxiliar = procesoActual.tiempoLlegada;
             }
             
-            // Si el proceso no ha sido ejecutado previamente
+            // Si el proceso no ha sido ejecutado previamente, se le asigna el tiempo en el que subio a CPU
+            //El proceso tiene que tener una id distinta a 1 ya que en algunos ejercicios el tiempo de llegada del primer proceso es 0
+            //Y puede tomar valores incorrectos
             if (procesoActual.gettiempoSubidaCPU() == 0 && procesoActual.id != 1) {
+                //Asignamos el tiempo de subida de cpu como el tiempo actual
                 procesoActual.settiempoSubidaCPU(tiempoActual);
+                //Imprimimos el tiempo actual para ver si es correcto
                 //System.out.println("TIEMPO ACTUAL"+ tiempoActual);
                 
             }
@@ -58,7 +72,7 @@ public class SimuladorPlanificacionProcesos {
             //Por ejemplo cuando el tiempo de servicio es 2 y el quantum 4.
             int tiempoEjecucion = Math.min(procesoActual.getTiempoServicio(), quantum);
             
-            
+            //Acumulamos en la variable tiempoProcesado del proceso actual el tiempo que se ejecuto
             procesoActual.tiempoProcesado += tiempoEjecucion;
             // Avanzar el tiempo actual
             tiempoActual += tiempoEjecucion;
@@ -77,8 +91,11 @@ public class SimuladorPlanificacionProcesos {
                 // El proceso ha terminado
                 
                 System.out.println("Proceso " + procesoActual.id + " completado y no volverá a la cola. Tiempo sobrante " + Math.abs(procesoActual.tiempoServicio) + "\n");
+                //Aumentamos el numero de procesos terminados ya que uno acaba de terminar
                 totalProcesos++;
+                //El proceso actual finalizo en el tiempoActual
                 int tiempoFinalizacion = tiempoActual;
+                //Realizacion del calculo de los tiempos de respuesta,espera y ejecucion de cada proceso
                 int tiempoRespuesta = procesoActual.tiempoSubidaCPU - procesoActual.tiempoLlegada + tiempoAuxiliar*2;
                 int tiempoEspera = (tiempoActual - tiempoEjecucion) -  procesoActual.tiempoLlegada - (procesoActual.tiempoProcesado - tiempoEjecucion + tiempoAuxiliar) ;
                 int tiempoEje = tiempoFinalizacion - procesoActual.tiempoLlegada;
@@ -272,8 +289,6 @@ public class SimuladorPlanificacionProcesos {
         
         return quantum;
     }
-
-    
 }
 
     

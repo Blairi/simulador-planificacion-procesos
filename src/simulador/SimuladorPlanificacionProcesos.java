@@ -38,12 +38,13 @@ public class SimuladorPlanificacionProcesos {
         // Encolamos en PL
         // TODO: leer los procesos del usuario
         ColaPL colaPL = new ColaPL();
+        // Proceso(id, nombre, tamanio, tiempoServicio, tiempoLlegada, prioridad, tiempoSubidaCPU, tiempoProcesado)
         colaPL.encolarPL(new Proceso(1, "P1", 100, 20, 0, 1, 0,0));
-        colaPL.encolarPL(new Proceso(2, "P2", 100, 8, 0, 1, 0,0));
-        colaPL.encolarPL(new Proceso(3, "P3", 100, 10, 0, 1, 0,0));
+        colaPL.encolarPL(new Proceso(2, "P2", 400, 8, 0, 1, 0,0));
+        colaPL.encolarPL(new Proceso(3, "P3", 400, 10, 0, 1, 0,0));
         colaPL.encolarPL(new Proceso(4, "P4", 100, 13, 0, 1, 0,0));
         colaPL.encolarPL(new Proceso(5, "P5", 100, 2, 0, 1, 0,0));
-        colaPL.encolarPL(new Proceso(6, "P6", 100, 9, 0, 1, 0,0));
+        colaPL.encolarPL(new Proceso(6, "P6", 400, 9, 0, 1, 0,0));
         
         ColaPLE colaPLE = new ColaPLE();
         

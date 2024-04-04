@@ -22,7 +22,8 @@ public class Cola<T> {
         // Si el frente y detras son nulos, la cola esta vacia
         return (null == frente && null == detras);
     }
-    
+
+    //Obtenemos el valor del frente de la cola
     public T getFrente() {
         return this.frente.getValor();
     }
@@ -41,8 +42,11 @@ public class Cola<T> {
             return true;
         }
         
-        //El nodo que se encuentre adelante del nodo creado.
+        //Ya que se encuentra en la cola al menos un nodo, definimos que del nodo que se encuentra atras de cola,el nodo siguiente de este es el nodoNuevo
+        // Ejemplo : Cola : (ultimo → primero) [C B A], nodo por encolar D
+        //Del detras de la cola, es decir Nodo C, el siguiente va a ser D → [D C B A] 
         this.detras.setNodoSiguiente(nodoNuevo);
+        //Declaramos que el nodo encolado es el nuevo detras de la cola
         nodoNuevo.setNodoPrevio(this.detras);
         //Encolamos el nodo a la cola 
         this.detras = nodoNuevo;

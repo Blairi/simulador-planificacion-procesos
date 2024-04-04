@@ -10,10 +10,9 @@ public class Proceso {
     public int tiempoLlegada; // Tiempo de llegada
     //Este atributo se solicita pero por indicacion no se utiliza
     public int prioridad;
-    //Tiempo en el que es por primera a CPU
+    //Tiempo en el que subio por primera vez a CPU
     public int tiempoSubidaCPU;
-    //Para el calculo de los tiempos de espera
-    //Es un acumulador de cuanto tiempo ha sido procesado
+    //Para el calculo de los tiempos de espera, es un acumulador de cuanto tiempo ha sido procesado
     public int tiempoProcesado;
     
     //Constructor de la clase Proceso

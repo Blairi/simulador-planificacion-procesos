@@ -6,8 +6,6 @@ import java.util.Scanner;
 import jtexttable.TextTable;
 import simulador.colaprocesos.ColaPL;
 import simulador.colaprocesos.ColaPLE;
-//Sirve para crear las colas
-import simulador.colaprocesos.ColaProcesos;
 //Sirve para ir almacenando los procesos
 import simulador.proceso.Proceso;
 
@@ -33,18 +31,19 @@ public class SimuladorPlanificacionProcesos {
         int sumaTiempoRespuesta = 0;
         int sumaTiempoEjecucion = 0;
         
-        int quantum = 4; // TODO: leer del usuario
-
-        // Encolamos en PL
-        // TODO: leer los procesos del usuario
-        ColaPL colaPL = new ColaPL();
+        
+//        ColaPL colaPL = new ColaPL();
         // Proceso(id, nombre, tamanio, tiempoServicio, tiempoLlegada, prioridad, tiempoSubidaCPU, tiempoProcesado)
-        colaPL.encolarPL(new Proceso(1, "P1", 100, 20, 0, 1, 0,0));
-        colaPL.encolarPL(new Proceso(2, "P2", 400, 8, 0, 1, 0,0));
-        colaPL.encolarPL(new Proceso(3, "P3", 400, 10, 0, 1, 0,0));
-        colaPL.encolarPL(new Proceso(4, "P4", 100, 13, 0, 1, 0,0));
-        colaPL.encolarPL(new Proceso(5, "P5", 100, 2, 0, 1, 0,0));
-        colaPL.encolarPL(new Proceso(6, "P6", 400, 9, 0, 1, 0,0));
+//        colaPL.encolarPL(new Proceso(1, "P1", 100, 20, 0, 1, 0,0));
+//        colaPL.encolarPL(new Proceso(2, "P2", 400, 8, 0, 1, 0,0));
+//        colaPL.encolarPL(new Proceso(3, "P3", 400, 10, 0, 1, 0,0));
+//        colaPL.encolarPL(new Proceso(4, "P4", 100, 13, 0, 1, 0,0));
+//        colaPL.encolarPL(new Proceso(5, "P5", 100, 2, 0, 1, 0,0));
+//        colaPL.encolarPL(new Proceso(6, "P6", 400, 9, 0, 1, 0,0));
+        ColaPL colaPL = leerProcesos();
+
+//        int quantum = 4;
+        int quantum = leerQuantum();
         
         ColaPLE colaPLE = new ColaPLE();
         
@@ -137,7 +136,7 @@ public class SimuladorPlanificacionProcesos {
         System.out.println(tablaResultados);
     }
     
-    private static ColaProcesos leerProcesos() {
+    private static ColaPL leerProcesos() {
         // Crear un objeto Scanner para leer datos de la consola
         Scanner scanner = new Scanner(System.in);
         
@@ -150,7 +149,7 @@ public class SimuladorPlanificacionProcesos {
         // Solicitar el número de procesos
         int numProcesos;
         //Creamos la cola de procesos listos (aquellos que estan en espera de subir a la CPU
-        ColaProcesos colaPL = new ColaProcesos();
+        ColaPL colaPL = new ColaPL();
         do {
             
             System.out.print("Ingrese el numero de procesos: ");
@@ -262,7 +261,7 @@ public class SimuladorPlanificacionProcesos {
             procesosUsuario[i-1][5] = String.valueOf( prioridad );
             
             // Insertamos el proceso a la cola
-            colaPL.encolarPLE( new Proceso(i, nombre, tamanio, tiempoServicio, tiempoLlegada,prioridad,tiempoSubidaCPU,tiempoProcesado) );       
+            colaPL.encolarPL( new Proceso(i, nombre, tamanio, tiempoServicio, tiempoLlegada,prioridad,tiempoSubidaCPU,tiempoProcesado) );
         }
         
         // Mostrar procesos al usuario

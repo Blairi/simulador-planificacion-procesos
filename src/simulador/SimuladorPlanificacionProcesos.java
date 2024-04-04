@@ -104,7 +104,7 @@ public class SimuladorPlanificacionProcesos {
             // Si el proceso aún tiene tiempo restante de servicio, es decir distinto a 0
             if (procesoActual.getTiempoServicio() > 0) {
                 // Volver a encolar el proceso en la cola de procesos
-                colaPLE.encolarPLE(procesoActual);
+                colaPL.encolarPL(procesoActual);
             } else {
                 // El proceso ha terminado
                 System.out.println("Proceso " + procesoActual.id + " completado y no volvera a la cola. Tiempo sobrante " + Math.abs(procesoActual.tiempoServicio) + " [msg]\n");

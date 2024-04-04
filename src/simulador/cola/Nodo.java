@@ -17,7 +17,6 @@ public class Nodo<T> {
     public Nodo(Nodo<T> nodoPrevio, Nodo<T> nodoSiguiente, T valor) {
        
         // Inicializamos los atributos del nodo
-        //Atributos previos
         this.nodoPrevio = nodoPrevio;
         this.nodoSiguiente = nodoSiguiente;
         //Contiene la referencia al proceso

@@ -4,6 +4,7 @@ package simulador;
 import java.util.Scanner;
 //Sirve para dar formato a las tablas
 import jtexttable.TextTable;
+//Importamos las clases creadas en los otros archivos
 import simulador.colaprocesos.ColaPL;
 import simulador.colaprocesos.ColaPLE;
 //Sirve para ir almacenando los procesos
@@ -12,15 +13,10 @@ import simulador.proceso.Proceso;
 public class SimuladorPlanificacionProcesos {
     
     public static void main(String[] args) {
-       
-        /*
-            Para esta parte del codigo leemos la entradas del usuario,
-            con algunas validaciones para que el programa funcione bien
-        */
-//        ColaProcesos colaPL = leerProcesos();
-//        int quantum = leerQuantum();
         
-        //Algoritmo Round Robin
+        //ALGORITMO ROUND ROBIN
+        
+        //Variable usada para avanzar en el tiempo
         int tiempoActual = 0;
         //En caso de que el tiempo de llegada del primer proceso sea distinto de 0, arreglamos los resultados con esta variable
         int tiempoAuxiliar = 0;
@@ -32,32 +28,41 @@ public class SimuladorPlanificacionProcesos {
         int sumaTiempoEjecucion = 0;
         
         
+        //FORMATO TEMPORAL PARA CATCHEAR LOS DATOS DE LOS PROCESOS Y ENCOLARLOS EN LA COLA DE PROCESOS LISTOS
+       
 //        ColaPL colaPL = new ColaPL();
-        // Proceso(id, nombre, tamanio, tiempoServicio, tiempoLlegada, prioridad, tiempoSubidaCPU, tiempoProcesado)
+//        Proceso(id, nombre, tamanio, tiempoServicio, tiempoLlegada, prioridad, tiempoSubidaCPU, tiempoProcesado)
 //        colaPL.encolarPL(new Proceso(1, "P1", 100, 20, 0, 1, 0,0));
 //        colaPL.encolarPL(new Proceso(2, "P2", 400, 8, 0, 1, 0,0));
 //        colaPL.encolarPL(new Proceso(3, "P3", 400, 10, 0, 1, 0,0));
 //        colaPL.encolarPL(new Proceso(4, "P4", 100, 13, 0, 1, 0,0));
 //        colaPL.encolarPL(new Proceso(5, "P5", 100, 2, 0, 1, 0,0));
 //        colaPL.encolarPL(new Proceso(6, "P6", 400, 9, 0, 1, 0,0));
-        ColaPL colaPL = leerProcesos();
 
+        //Definimos que la cola de procesos listos (PL) es igual a los procesos leidos por teclado
+        ColaPL colaPL = leerProcesos();
+          //Forma de definir el quantum directamente
 //        int quantum = 4;
+        //Definimos que el quantum es igual al leido por teclado
         int quantum = leerQuantum();
-        
+        //Creamos la cola de procesos listos para ejecucion mediante un constructor
         ColaPLE colaPLE = new ColaPLE();
         
-        // Mientras haya procesos en la cola de procesos
+        // Mientras haya procesos en la cola de procesos listos y en la cola de procesos listos para ejecucion
+        //Se realizara Round Robin
         while ( !colaPL.estaVacia() || !colaPLE.estaVacia() ) {
-            
+            //Mientras la cola pl no este vacia y la cola ple tenga espacio para encolar el proceso de enfrente de pl
+            //Podremos encolar un proceso de pl a ple, es decir, se libero espacio en RAM
             while ( !colaPL.estaVacia() &&
                     colaPLE.tieneMemoria(colaPL.obtenerProcesoDeEnFrente().getTamanio()) 
                     ) {
+                //Desencolamos el proceso de enfrente de pl
                 Proceso procesoPL = colaPL.desencolar();
+                //Lo encolamos en ple
                 colaPLE.encolarPLE( procesoPL );
             }
             
-            // Obtener el proceso de la cola de procesos
+            // Obtener el proceso de la cola de procesos listos para ejecucion
             Proceso procesoActual = colaPLE.desencolar();
             
             //Este condicinal se ocupa cuando el primer proceso en llegar tiene un tiempo de llegada disntinto a 0
@@ -71,7 +76,6 @@ public class SimuladorPlanificacionProcesos {
             
             // Si el proceso no ha sido ejecutado previamente, se le asigna el tiempo en el que subio a CPU
             //El proceso tiene que tener una id distinta a 1 ya que en algunos ejercicios el tiempo de llegada del primer proceso es 0
-            //Y puede tomar valores incorrectos
             if (procesoActual.gettiempoSubidaCPU() == 0 && procesoActual.id != 1) {
                 //Asignamos el tiempo de subida de cpu como el tiempo actual
                 procesoActual.settiempoSubidaCPU(tiempoActual);
@@ -95,15 +99,15 @@ public class SimuladorPlanificacionProcesos {
            
             // Restar el tiempo de ejecución del proceso
             procesoActual.setTiempoServicio(procesoActual.getTiempoServicio() - tiempoEjecucion);
-            System.out.println("Tiempo:"+tiempoActual+ " Proceso " + procesoActual.id + " ejecutado durante " + tiempoEjecucion + " unidades. Tiempo restante: " + procesoActual.tiempoServicio);
-            // Si el proceso aún tiene tiempo restante
+            //Imprimos los datos 
+            System.out.println("Tiempo:"+tiempoActual+ " Proceso " + procesoActual.id + " ejecutado durante " + tiempoEjecucion + "[msg]. Tiempo restante: " + procesoActual.tiempoServicio+ " [msg]");
+            // Si el proceso aún tiene tiempo restante de servicio, es decir distinto a 0
             if (procesoActual.getTiempoServicio() > 0) {
                 // Volver a encolar el proceso en la cola de procesos
                 colaPLE.encolarPLE(procesoActual);
             } else {
                 // El proceso ha terminado
-                
-                System.out.println("Proceso " + procesoActual.id + " completado y no volverá a la cola. Tiempo sobrante " + Math.abs(procesoActual.tiempoServicio) + "\n");
+                System.out.println("Proceso " + procesoActual.id + " completado y no volvera a la cola. Tiempo sobrante " + Math.abs(procesoActual.tiempoServicio) + " [msg]\n");
                 //Aumentamos el numero de procesos terminados ya que uno acaba de terminar
                 totalProcesos++;
                 //El proceso actual finalizo en el tiempoActual
@@ -132,11 +136,17 @@ public class SimuladorPlanificacionProcesos {
         TextTable tablaResultados = new TextTable(encabezados2, datos);
 
         // Mostrar la tabla de resultados
-        System.out.println("\nTabla de resultados:");
+        System.out.println("\nTabla de resultados [msg]:");
         System.out.println(tablaResultados);
     }
     
     private static ColaPL leerProcesos() {
+        
+        /*
+            Para esta parte del codigo leemos la entradas del usuario,
+            con algunas validaciones para que el programa funcione bien
+        */
+        
         // Crear un objeto Scanner para leer datos de la consola
         Scanner scanner = new Scanner(System.in);
         

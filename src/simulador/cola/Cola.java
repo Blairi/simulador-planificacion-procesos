@@ -23,6 +23,10 @@ public class Cola<T> {
         return (null == frente && null == detras);
     }
     
+    public T getFrente() {
+        return this.frente.getValor();
+    }
+    
     //Encolamos Nodos con datos tipos T, donde valor almacena la referencia al proceso
     public Boolean encolar(T valor) {
         //Creamos un constructor de nodo
